@@ -1,55 +1,46 @@
 <?php
 /**
- * Шаблон шапки (header.php)
- * @package WordPress
- * @subpackage your-clean-template-3
+* Header темы
+* @package MediaThemeMobile
  */
 ?>
 <!DOCTYPE html>
-<html <?php language_attributes(); ?>>
+<html <?php language_attributes(); ?>  class="no-js">
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	<?php /* RSS и всякое */ ?>
-	<link rel="alternate" type="application/rdf+xml" title="RDF mapping" href="<?php bloginfo('rdf_url'); ?>">
-	<link rel="alternate" type="application/rss+xml" title="RSS" href="<?php bloginfo('rss_url'); ?>">
-	<link rel="alternate" type="application/rss+xml" title="Comments RSS" href="<?php bloginfo('comments_rss2_url'); ?>">
-	<link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
-
-	<!--[if lt IE 9]>
-	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+  <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0 minimal-ui">
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="msapplication-config" content="/browserconfig.xml" />
+	<title><?php is_home() ? bloginfo('description') : wp_title(''); ?></title>
+	<meta name="application-name" content="<?php echo bloginfo('name'); ?>"/>
 	<?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-	<header>
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-					<nav class="navbar navbar-default">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#topnav" aria-expanded="false">
-								<span class="sr-only">Меню</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-						</div>
-						<div class="collapse navbar-collapse" id="topnav">
-							<?php $args = array( 
-								'theme_location' => 'top',
-								'container'=> false,
-						  		'menu_id' => 'top-nav-ul',
-						  		'items_wrap' => '<ul id="%1$s" class="nav navbar-nav %2$s">%3$s</ul>',
-								'menu_class' => 'top-menu',
-						  		'walker' => new bootstrap_menu(true)		  		
-					  			);
-								wp_nav_menu($args);
-							?>
-						</div>
-					</nav>
+	<div id="preloader">
+		<div id="status"></div>
+	</div>
+	<header class="page-header" id="header-fixed">
+		<div class="snap-drawers">
+			<div class="snap-drawer snap-drawer-left sidebar">
+				<div class="sidebar__header">
+					<a href="javascript:window.history.back()" title="Вернуться на предыдущую страницу" class="goback menu-icon"><i class="fa fa-reply"></i> Назад</a>
+					<a class="sidebar-close menu-icon" href="javascript:void(0)" title="Закрыть меню"><i class="fa fa-times"></i></a>
+					<a href="/" class="sidebar__logo">
+						<img src="<?php echo get_template_directory_uri(); ?>/images/logo.svg" alt="Babyke" class="lazyload">
+					</a>
 				</div>
 			</div>
+			<div class="snap-drawer snap-drawer-right">
+
+			</div>
 		</div>
+
+	        <div id="content" class="snap-content">
+	            <div id="toolbar">
+	                <a href="#" id="open-left"></a>
+	                <h1>Default</h1>
+	            </div>
+	        </div>
 	</header>
