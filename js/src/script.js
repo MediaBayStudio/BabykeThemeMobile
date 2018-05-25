@@ -1,6 +1,30 @@
-			var snapper = new Snap({
-					element: document.getElementById('content')
-			});
+	var snapper = new Snap({
+			element: document.getElementById('content'),
+			disable: 'none',
+			tapToClose: true,
+			touchToDrag: true,
+			maxPosition: 260,
+			minPosition: -260
+	});
+
+	$('.sidebar__control--close').click(function() {
+			snapper.close();
+	});
+
+	$('.sidebar-deploy--left').click(function() {
+		if( snapper.state().state=="left" ) snapper.close();
+		else  snapper.open('left');
+		$('.share-bottom').removeClass('active-share-bottom');
+		return false;
+	})
+
+	$('.sidebar-deploy--right').click(function() {
+		if( snapper.state().state=="right" ) snapper.close();
+		else  snapper.open('right');
+    $('.share-bottom').removeClass('active-share-bottom');
+		return false;
+	});
+
 
 
 var addEvent = function addEvent(element, eventName, func) {
@@ -11,9 +35,6 @@ var addEvent = function addEvent(element, eventName, func) {
     }
 };
 
-addEvent(document.getElementById('open-left'), 'click', function(){
-	snapper.open('left');
-});
 
 /* Prevent Safari opening links when viewing as a Mobile App */
 (function (a, b, c) {
@@ -27,3 +48,24 @@ addEvent(document.getElementById('open-left'), 'click', function(){
         }, !1)
     }
 })(document, window.navigator, "standalone");
+
+
+
+jQuery(document).ready(function($) {
+    $('.menu-item-has-children>a').click(function(){
+        $(this).toggleClass('active-submenu');
+        $(this).parent().find('.submenu').slideToggle(200);
+        return false;
+    });
+
+
+
+	//Submenu Nav
+
+	$('.submenu-nav-deploy').click(function() {
+		$(this).toggleClass('submenu-nav-deploy-active');
+		$(this).parent().find('.submenu-nav-items').slideToggle(200);
+		return false;
+	});
+
+});
