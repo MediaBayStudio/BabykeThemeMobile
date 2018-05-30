@@ -108,6 +108,46 @@
  	}
  }
 
+ global $allowedposttags;
+ $allowedposttags_add = array (
+ 				'svg' => array(
+           'class'    => true,
+           'id' => true,
+           'viewBox' => true
+ 				),
+         'use' =>array(
+           'xmlns:xlink' => true,
+           'xlink:href' => true,
+           'class' => true
+         )
+ 			);
+ $allowedposttags = array_merge ($allowedposttags, $allowedposttags_add);
+
+ function override_mce_options($initArray) {
+ 	$opts = '*[*]';
+ 	$initArray['valid_elements'] = $opts;
+ 	$initArray['extended_valid_elements'] = $opts;
+ 	return $initArray;
+ }
+ add_filter('tiny_mce_before_init', 'override_mce_options');
+ add_filter( 'tiny_mce_before_init', 'fb_tinymce_add_pre' );
+ 
+ function fb_tinymce_add_pre( $initArray ) {
+
+     // Comma separated string od extendes tags
+     // Command separated string of extended elements
+     $ext = 'svg[preserveAspectRatio|style|class|version|viewbox|xmlns],defs,linearGradient[id|x1|y1|z1]';
+
+     if ( isset( $initArray['extended_valid_elements'] ) ) {
+         $initArray['extended_valid_elements'] .= ',' . $ext;
+     } else {
+         $initArray['extended_valid_elements'] = $ext;
+     }
+     // maybe; set tiny paramter verify_html
+     //$initArray['verify_html'] = false;
+
+     return $initArray;
+ }
 
 
 ?>

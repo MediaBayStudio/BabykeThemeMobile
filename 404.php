@@ -4,16 +4,15 @@
  * @package WordPress
  * @subpackage your-clean-template-3
  */
-get_header(); ?>
-<section>
-	<div class="container">
-		<div class="row">
-			<div class="<?php content_class_by_sidebar(); ?>">
-				<h1>Ой, это 404!</h1>
-				<p>Блаблабла 404 Блаблабла</p>
-			</div>
-			<?php get_sidebar(); ?>
-		</div>
-	</div>
-</section>
-<?php get_footer(); ?>
+ get_header(); ?>
+
+ <main class="page-main">
+   <section class="slider-section" data-snap-ignore="true">
+     <img data-src="<?php echo get_stylesheet_directory_uri(); ?>/images/404.jpg" alt='Ошибка 404' class="lazyload" />
+   </section>
+   <div class="page-main__content">
+       <?php dynamic_sidebar('main'); ?>
+   </div>
+ </main>
+
+ <?php get_footer(); ?>

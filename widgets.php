@@ -388,11 +388,11 @@ class mobileCategoriesSlider extends WP_widget {
 															data-src='" . get_bloginfo('template_url') .'/images/no-image.svg' . "' alt='" . get_cat_name($cat_id) . "'width='150' height='150' class='cat_thumb lazyload' />";
 	                    }
 	                    // Если плагин поддержки изображений для категорий не установлен - выводим заглушку
-	                    //else
-	                    //	echo "<img src=" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg width='150' height='150' data-src='" . get_bloginfo('template_url') . '/images/no-image.svg' . "' alt='" . $category->name . "' class='cat_thumb lazyload' />";
+	                    else
+	                    	echo "<img src=" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg width='150' height='150' data-src='" . get_bloginfo('template_url') . '/images/no-image.svg' . "' alt='" . $category->name . "' class='cat_thumb lazyload' />";
 										}
 										?>
-										<a class="staff__name" href="/<?php echo $category->slug; ?>"><?php echo $category->name; ?></a>
+										<a class="staff__name" href="<?php echo get_site_url() . '/' . $category->slug; ?>"><?php echo $category->name; ?></a>
 								</div>
 						<?php } } ?>
 			</div>

@@ -98,3 +98,32 @@
 			</div>
 		</nav>
 	</header>
+	<div id="content" class="snap-content main-wrapper">
+	  <div id="toolbar">
+	    <a href="#" class="toolbar__deploy sidebar-deploy--left">
+	      <i class="fas fa-bars" aria-hidden="true"></i>
+	    </a>
+	    <a href="/" class="toolbar__header">
+	      <h1>Babyke</h1>
+	    </a>
+	    <div class="toolbar__icons">
+	      <div class="toolbar__font-controls">
+	        <div class="toolbar__control">
+	          <a class="up-font-deploy" title="Увеличить размер шрифта">
+	            <i class="fa fa-plus"></i>
+	          </a>
+	        </div>
+	        <div class="toolbar__control">
+	          <a class="down-font-deploy" title="Увеличить размер шрифта">
+	            <i class="fa fa-minus"></i>
+	          </a>
+	        </div>
+	      </div>
+	      <a class="toolbar__deploy sidebar-deploy--right">
+	        <i class="fa fa-envelope"></i>
+	      </a>
+	      <a href="javascript:window.history.back()" class="toolbar__deploy" title="Вернуться на предыдущую страницу">
+	        <i class="fa fa-reply"></i>
+	      </a>
+	    </div>
+	  </div>
