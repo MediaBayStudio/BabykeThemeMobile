@@ -17,19 +17,17 @@ function true_remove_default_widget() {
 add_action( 'widgets_init', 'true_remove_default_widget', 20 );
 
 class mobilePosts extends WP_Widget {
-	function __construct() {
-		parent::__construct(
+  function __construct() {
+    parent::__construct(
       'mobilePosts',
-      'Сетка из четырех постов', // заголовок виджета
+      'Четыре последних поста', // заголовок виджета
       array( 'description' => 'Показывает четыре последних поста выбранных категорий' ) // описание
     );
   }
 
 	function form( $instance ){
     echo '<p> Выберите необходимые категории </p> ';
-    $args = array(
-									'parent'  => 0
-    );
+    $args = array( 'parent'  => 0 );
     $categories = get_categories($args);
     $arrlength=count($categories);
     for( $x=0; $x<$arrlength; $x++ ) $tempArray[$this->get_field_id($categories[$x]->slug)] = '';
@@ -56,82 +54,86 @@ class mobilePosts extends WP_Widget {
 		return $instance;
 	}
 
+
 	public function widget( $args, $instance ) {
 		?>
 			<ul class="posts_grid">
 				<?php
-					foreach($instance as $key=>$value)
-						if ($value) {
-							$cat = get_category_by_slug($key);
-							$sub_cats = get_categories( array(
-								'child_of' => $cat->cat_ID,
-								'hide_empty' => 0
-							) );
-							if( $sub_cats ){
-								foreach( $sub_cats as $cat ){
-									$categories_array[] = $cat->cat_ID;
-								}
-							}
-						}
+					array_pop($instance);
+					foreach($instance as $key => $value)
+					if ($value) {
+						$cat = get_category_by_slug($key);
+						$categories_array[] = $cat->cat_ID;
+		        $sub_cats = get_categories( array(
+		          'child_of' => $cat->cat_ID,
+		          'hide_empty' => 1
+		        ) );
+						if( $sub_cats ){
+		          foreach( $sub_cats as $cat ){
+		            $categories_array[] = $cat->cat_ID;
+		          }
+		        }
+					}
 					global $post;
-					$mypost = get_posts(
-		                  array(
-		                    'category__in'      => array(17,16,4),
-		                    'post_type'         => 'post',
-		                    'orderby'           => 'date',
-		                    'posts_per_page'    => 4
-		                    ) );
-		      $side = 'left';
-		      $side_count = 0;
-		      $lastcol = '';
-					foreach( $mypost as $post ) : setup_postdata($post); ?>
-						<li class="post post--<?php echo $side; ?>">
-							<a class="post__image" href="<?php the_permalink() ?>">
-								<picture>
-								<?php
-									if (!has_post_thumbnail( $post->id ) || !(@get_headers(wp_get_attachment_image_url( get_post_thumbnail_id( $post->id ), 'responsive_mob' )))) {
-								?>
-									<img src="<?php echo get_stylesheet_directory_uri();?>/images/no-image.svg" alt="Избражение не найдено" width="100" height="100">
-								<?php }  else { ?>
-										<img src="<?php echo get_bloginfo( 'template_directory' )?>/images/dots_150.svg"
-										data-srcset="<?php echo wp_get_attachment_image_url( get_post_thumbnail_id( $post->id ), 'responsive_mob' ); ?> 1x,
-										<?php echo wp_get_attachment_image_url( get_post_thumbnail_id( $post->id ), 'medium' ); ?> 2x" alt="<?php the_title(); ?>"
-										alt="<?php the_title(); ?>" class="responsive-image lazyload" width="100" height="100" />
-								<?php  }?>
-								</picture>
-							</a>
-							<div class="post__content">
-								<h2 class="post__title">
-									<a href="<?php the_permalink() ?>"><?php the_title('', '', true); ?></a>
-								</h2>
-								<p class="post__excerpt post__excerpt--mobile">
-									<?php
-										if ( has_excerpt() ){ the_excerpt(); }
-										else { kama_excerpt("maxchar=50"); }
-									?>
-								</p>
-								<p class="post__excerpt post__excerpt--tablet">
-									<?php
-										if ( has_excerpt() ){ the_excerpt(); }
-										else { kama_excerpt("maxchar=150"); }
-									?>
-								</p>
-							</div>
-						</li>
-						<?php
-							$side_count = $side_count + 1;
-							if ($side_count & 1) {
-								$side = 'right';
-								$lastcol = ' last-column';
-							}
-							else {
-								$side = 'left';
-								$lastcol = '';
-							}
-						?>
-					<?php endforeach; ?>
+				    $mypost = get_posts(
+				                array(
+				                  'category__in'      => $categories_array,
+				                  'post_type'         => 'post',
+				                  'orderby'           => 'date',
+				                  'posts_per_page'    => 4
+				                  ) );
+				    $side = 'left';
+				    $side_count = 0;
+				    $lastcol = '';
+						foreach( $mypost as $post ) : setup_postdata($post); ?>
+				      <li class="post post--<?php echo $side; ?>">
+				        <a class="post__image" href="<?php the_permalink() ?>">
+				          <picture>
+				          <?php
+				            if (!has_post_thumbnail( $post->id ) || !(@get_headers(wp_get_attachment_image_url( get_post_thumbnail_id( $post->id ), 'responsive_mob' )))) {
+				          ?>
+				            <img src="<?php echo get_stylesheet_directory_uri();?>/images/no-image.svg" alt="Избражение не найдено" width="100" height="100">
+				          <?php }  else { ?>
+				              <img src="<?php echo get_bloginfo( 'template_directory' )?>/images/dots_150.svg"
+				              data-srcset="<?php echo wp_get_attachment_image_url( get_post_thumbnail_id( $post->id ), 'responsive_mob' ); ?> 1x,
+				              <?php echo wp_get_attachment_image_url( get_post_thumbnail_id( $post->id ), 'medium' ); ?> 2x" alt="<?php the_title(); ?>"
+				              alt="<?php the_title(); ?>" class="responsive-image lazyload" width="100" height="100" />
+				          <?php  }?>
+				          </picture>
+				        </a>
+				        <div class="post__content">
+				          <h2 class="post__title">
+				            <a href="<?php the_permalink() ?>"><?php the_title('', '', true); ?></a>
+				          </h2>
+				          <p class="post__excerpt post__excerpt--mobile">
+				            <?php
+				              if ( has_excerpt() ){ the_excerpt(); }
+				              else { kama_excerpt("maxchar=50"); }
+				            ?>
+				          </p>
+				          <p class="post__excerpt post__excerpt--tablet">
+				            <?php
+				              if ( has_excerpt() ){ the_excerpt(); }
+				              else { kama_excerpt("maxchar=150"); }
+				            ?>
+				          </p>
+				        </div>
+				      </li>
+				      <?php
+				        $side_count = $side_count + 1;
+				        if ($side_count & 1) {
+				          $side = 'right';
+				          $lastcol = ' last-column';
+				        }
+				        else {
+				          $side = 'left';
+				          $lastcol = '';
+				        }
+				      ?>
+				    <?php endforeach; wp_reset_postdata();?>
 			</ul>
-		<?php
+
+			<?php
 	}
 }
 
@@ -197,12 +199,13 @@ class mobileNewsFeed extends WP_widget {
 		<ul class="feed">
 			<?php
 				array_pop($instance);
-				foreach($instance as $key=>$value)
+				foreach($instance as $key => $value)
 					if ($value) {
 						$cat = get_category_by_slug($key);
+						$categories_array[] = $cat->cat_ID;
 						$sub_cats = get_categories( array(
 							'child_of' => $cat->cat_ID,
-							'hide_empty' => 0
+							'hide_empty' => 1
 						) );
 						if( $sub_cats ){
 							foreach( $sub_cats as $cat ){
@@ -210,11 +213,13 @@ class mobileNewsFeed extends WP_widget {
 							}
 						}
 					}
+					global $post;
 					$custom_query_args = array (
 															'category__in' => $categories_array, // записи из категорий
 															'post_type' => 'post', // тип записей
 															'posts_per_page' => '4', // количество записей на странице
 															'orderby' => 'date' ); // сортировка
+
 					/* Получаем текущую страницу нумерации и добавляем ее к массиву пользовательских параметров */
 					$custom_query_args['paged'] = get_query_var( 'paged' ) ? get_query_var( 'paged' ) : 1;
 
@@ -293,7 +298,7 @@ class mobileCategoriesSlider extends WP_widget {
 			$title = $instance[ 'title' ];
 		}
 		else
-			$title = __( '', 'Категории' );
+			$title = __( '', 'Последние статьи' );
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:' ); ?></label>
@@ -301,24 +306,27 @@ class mobileCategoriesSlider extends WP_widget {
 		</p>
 		<?php
      echo '<p> Выберите необходимые категории </p> ';
-    $args = array(
-									'parent'  => 0
-    );
-    $categories = get_categories($args);
+    $categories = get_categories();
+		//print_r($categories);
     $arrlength=count($categories);
-    for( $x=0; $x<$arrlength; $x++ ) $tempArray[$this->get_field_id($categories[$x]->slug)] = '';
+    for( $x=0; $x<$arrlength; $x++ )
+			$tempArray[$this->get_field_id($categories[$x]->slug)] = '';
     $instance = wp_parse_args( (array) $instance, $tempArray );
 		for( $x=0; $x<$arrlength; $x++) $tempCheckFlag[$categories[$x]->slug] = $instance[$categories[$x]->slug]  ? 'checked="checked"' : '';
     for( $x=0; $x<$arrlength; $x++) {
-			echo '<p><input class ="checkbox" type="checkbox" value="1" id="'.$this->get_field_id($categories[$x]->slug).'" name="'.$this->get_field_name($categories[$x]->slug).'"'.$tempCheckFlag[$categories[$x]->slug].'>'.$categories[$x]->name.'</p>';
+			if ($categories[$x]->parent == 0) {
+				echo '<p><input class ="checkbox" type="checkbox" value="1" id="'.$this->get_field_id($categories[$x]->slug).'" name="'.$this->get_field_name($categories[$x]->slug).'"'.$tempCheckFlag[$categories[$x]->slug].'>'.$categories[$x]->name.'</p>';
+				for( $y=0; $y<$arrlength; $y++) {
+					if ($categories[$y]->parent == $categories[$x]->cat_ID) {
+						echo '<p style="padding-left: 30px;"><input class ="checkbox" type="checkbox" value="1" id="'.$this->get_field_id($categories[$y]->slug).'" name="'.$this->get_field_name($categories[$y]->slug).'"'.$tempCheckFlag[$categories[$y]->slug].'>'.$categories[$y]->name.'</p>';
+					}
+				}
+			}
     }
 	}
 
 	public function update( $new_instance, $old_instance ) {
-		$args = array(
-        'parent'  => 0
-    );
-    $categories = get_categories( $args );   // returns an array of category objects
+    $categories = get_categories();   // returns an array of category objects
     $arrlength=count($categories);
 
     for( $x=0; $x<$arrlength; $x++ ) $tempArray[$categories[$x]->slug] = '';
@@ -327,10 +335,9 @@ class mobileCategoriesSlider extends WP_widget {
     for( $x=0; $x<$arrlength; $x++ ){
         $instance[$categories[$x]->slug] = $new_instance[$categories[$x]->slug] ? 1 : 0;
     }
-		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : 'Категории';
+		$instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : 'Последние новости';
 		return $instance;
 	}
-
 
 	public function widget( $args, $instance ) {
 		$title = apply_filters( 'widget_title', $instance['title'] );
@@ -343,60 +350,44 @@ class mobileCategoriesSlider extends WP_widget {
 			<div class="staff-slider owl-carousel owl-theme" data-snap-ignore="true">
 				<?php
 					array_shift($instance);
-					foreach($instance as $key=>$value)
+					foreach($instance as $key => $value)
 						if ($value) {
 							$cat = get_category_by_slug($key);
 							$categories_array[] = $cat->cat_ID;
 						}
-						$args = 'include=' . implode(',', $categories_array) . '&orderby=none';
+						$args = array(
+											'include'  => $categories_array,
+											'orderby' => 'none'
+				    );
 						$categories = get_categories($args);
-						if( $categories ){
-							foreach( $categories as $category ){ ?>
-								<div class="staff-item">
-										<?php
-										// Адреса наших svg файлов
-										$filename = get_stylesheet_directory_uri() . '/images/cat/' . $category->term_id . '.svg';
-										$urlHeaders = @get_headers($filename);
-										// проверяем ответ сервера на наличие кода: 200 - ОК
-										if(strpos($urlHeaders[0], '200')) {
-											// Если есть - выводим картинку в SVG
-											echo "<a href='/" . $category->slug . "'>";
-											echo "<img src=" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg width='150' height='150' data-src='" . $filename . "' alt='" . $category->name . "' class='lazyload' />";
-											echo "</a>";
+						if($categories) {
+							foreach ($categories as $category) {
+								echo "<div class='staf__item'>";
+								if (function_exists('z_taxonomy_image_url')) {
+									$cat_img_src = z_taxonomy_image_url($category->term_id);
+									$file_name = end( explode("/", $cat_img_src) );
+									$file_extension = end( explode(".", $file_name) );
+									if ($file_extension == 'svg') {
+										echo "<img src='" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg' data-src='" . $cat_img_src . "' alt='" . $category->name . "' width='150' height='150' class='lazyload' />";
+									}
+									else
+										if ( $file_extension == 'png' || $file_extension == 'jpg' || $file_extension == 'jpeg') {
+											echo "<img src='" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg' data-srcset=" . z_taxonomy_image_url($category->term_id, 'thumbnail') . " 1x," . z_taxonomy_image_url($category->term_id, 'medium') .  "2x alt=" . $category->name . " width='150' height='150' class='responsive-image lazyload cat-img--loaded' />";
 										}
 										else {
-											if (function_exists('z_taxonomy_image_url')){
-	                        // Получаем URL картинки категории
-	                        $cat_img_src = z_taxonomy_image_url($category->term_id);
-	                        // Получаем имя файла
-	                        $file_name = end( explode("/", $cat_img_src) );
-	                        // Узнаем расширение файла
-	                        $file_extension = end( explode(".", $file_name) );
-	                        // Если SVG
-	                        if ($file_extension == 'svg') {
-	                            // Выводим картинку в SVG
-	                            echo get_bloginfo( 'template_directory' ) . "/images/dots_150.svg width='150' height='150' data-src='" . $cat_img_src . "' alt='" . $category->name . "' class='lazyload' />";
-	                        }
-	                        // Если растровая картинка
-	                        else if ($file_extension == 'png'||$file_extension == 'jpg'||$file_extension == 'jpeg') {
-	                            // Выводим сжатую растровую картинку ?>
-	                            <img src="<?php echo get_bloginfo( 'template_directory' );?>/images/dots_150.svg" data-srcset="<?php echo z_taxonomy_image_url($category->term_id, 'thumbnail'); ?> 1x, <?php echo z_taxonomy_image_url($category->term_id, 'medium'); ?> 2x" alt="<?php echo $category->name; ?>"width='150' height='150' class="responsive-image lazyload cat-img--loaded" >
-	                        <?php  }
-	                        // Если другой формат - выводим заглушку
-	                        else
-	                            echo "<img src=" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg
-															data-src='" . get_bloginfo('template_url') .'/images/no-image.svg' . "' alt='" . get_cat_name($cat_id) . "'width='150' height='150' class='cat_thumb lazyload' />";
-	                    }
-	                    // Если плагин поддержки изображений для категорий не установлен - выводим заглушку
-	                    else
-	                    	echo "<img src=" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg width='150' height='150' data-src='" . get_bloginfo('template_url') . '/images/no-image.svg' . "' alt='" . $category->name . "' class='cat_thumb lazyload' />";
+											echo "<img src='" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg' data-src='" . get_bloginfo( 'template_directory' ) . "/images/no-image.svg' alt='" . $category->name . "' width='150' height='150' class='lazyload' />";
 										}
-										?>
-										<a class="staff__name" href="<?php echo get_site_url() . '/' . $category->slug; ?>"><?php echo $category->name; ?></a>
-								</div>
-						<?php } } ?>
+								}
+								else {
+									echo "<img src='" . get_bloginfo( 'template_directory' ) . "/images/dots_150.svg' data-src='" . get_bloginfo( 'template_directory' ) . "/images/no-image.svg' alt='" . $category->name . "' width='150' height='150' class='lazyload' />";
+								}
+								echo "<a class='staff__name' href='" . get_site_url() . "/" . $category->slug ."'>" . $category->name ."</a></div>";
+							}
+						}
+				?>
 			</div>
 		</div>
+
 		<?php
 	}
 }
