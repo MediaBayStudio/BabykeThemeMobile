@@ -34,7 +34,12 @@
         </em>
          <div class="article__content"><?php the_content(); ?></div>
      </div>
+     <div class="comments_block">
+       <a href="<?php get_permalink()?>?comments=on" class="comments_link"><?php if (get_comments_number() ) printf( _n( 'Один комментарий', 'Комментарии (всего %1$s)', get_comments_number() ),
+                           number_format_i18n( get_comments_number() ) );  else echo "Написать комментарий";?></a>
+     </div>
 	 </article>
+
  </main>
  	<?php endwhile; endif; ?>
 

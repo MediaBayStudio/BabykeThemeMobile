@@ -107,4 +107,13 @@
  		$output .= "</li>\n";
  	}
  }
+
+ add_filter('single_template', 'dh_comments_template');
+ function dh_comments_template($template) {
+     global $wp_query;
+     if ( $_GET['comments'] == 'on' and
+         file_exists(TEMPLATEPATH . '/single-comments.php') )
+             $template = TEMPLATEPATH . '/single-comments.php';
+     return $template;
+ }
 ?>

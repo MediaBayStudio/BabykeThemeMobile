@@ -35,18 +35,18 @@ function resetProgressBar() {
 }
 var owl = jQuery('.owl-carousel');
 owl.on('initialized.owl.carousel', function(event) {
-  $('.info').text($(".slider-section").height());
+  jQuery('.info').text(jQuery(".slider-section").height());
   startProgressBar();
 });
 owl.on('translate.owl.carousel', function(event) {
   startProgressBar();
-  $('.info').text($(".slider-section").height());
+  jQuery('.info').text(jQuery(".slider-section").height());
 });
 owl.on('changed.owl.carousel', function(event) {
   resetProgressBar();
 });
 
-$('.staff-slider').owlCarousel({
+jQuery('.staff-slider').owlCarousel({
     loop:true,
     items:3,
     responsiveClass:true,
